@@ -7,3 +7,7 @@ Example image over my IDE:
 ![img.png](assets/img.png)
 
 Made in a couple of hours, don't expect it to be perfect, but it works pretty well as far as I've tested.
+
+## Installation
+
+Install via the Spicetify Marketplace, under the name `Picture-In-Picture`, with the gradient logo.
