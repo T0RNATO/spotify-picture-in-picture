@@ -1,0 +1,7 @@
+{
+  "name": "Picture-In-Picture",
+  "description": "Simple PiP music player.",
+  "preview": "assets/logo.png",
+  "main": "dist/picture-in-picture.js",
+  "readme": "README.md"
+}
