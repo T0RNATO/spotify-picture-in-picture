@@ -29,7 +29,7 @@ export default async function main() {
         });
 
         // Add pagehide listener to handle the case of the pip window being closed using the browser X button
-        win.addEventListener("pagehide", (event) => {
+        win.addEventListener("pagehide", () => {
             pipButton.active = false;
             doc = null;
         });
@@ -39,7 +39,7 @@ export default async function main() {
 }
 
 let doc: Document | null;
-let isPlaying = Spicetify.Player.isPlaying();
+let isPlaying: boolean;
 
 const ICONS = {
     pip: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M80-520v-80h144L52-772l56-56 172 172v-144h80v280H80Zm80 360q-33 0-56.5-23.5T80-240v-200h80v200h320v80H160Zm640-280v-280H440v-80h360q33 0 56.5 23.5T880-720v280h-80ZM560-160v-200h320v200H560Z"/></svg>`,
@@ -52,12 +52,31 @@ const ICONS = {
 
 }
 
+type Lyrics = {
+
+}
+
+function fetchLyrics(): Promise<Lyrics> {
+    return new Promise((resolve) => {
+        fetch(`https://beautiful-lyrics.socalifornian.live/lyrics/${encodeURIComponent(
+            Spicetify.Player.data.item.uri.split(':')[2]
+        )}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${Spicetify.Platform.Session.accessToken}`
+            }
+        }).then(r => r.json().then(resolve));
+    })
+}
+
 function render(win?: Window | null) {
     if (!doc || !win) return;
 
     const track = Spicetify.Player.data.item;
     const trackLength = track.duration.milliseconds;
     const artists = (track.artists || []).map(a => a.name).join(", ");
+
+    isPlaying = Spicetify.Player.isPlaying();
 
     const initialProgress = Spicetify.Player.getProgress();
 
@@ -139,7 +158,7 @@ function render(win?: Window | null) {
     </div>
     `;
     doc.querySelector(".prev")!.addEventListener("click", Spicetify.Player.back);
-    doc.querySelector(".play")!.addEventListener("click", (ev) => {
+    doc.querySelector(".play")!.addEventListener("click", () => {
         Spicetify.Player.togglePlay();
     });
     doc.querySelector(".next")!.addEventListener("click", Spicetify.Player.next);
